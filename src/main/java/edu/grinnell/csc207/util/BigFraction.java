@@ -1,12 +1,14 @@
 package edu.grinnell.csc207.util;
 
 import java.math.BigInteger;
+import java.lang.Integer;
+import java.lang.String;
 
 /**
  * A simple implementation of arbitrary-precision Fractions.
  *
  * @author Samuel A. Rebelsky
- * @author YOUR NAME HERE
+ * @author Maral Bat-Erdene, Khanh Do
  */
 public class BigFraction {
   // +------------------+---------------------------------------------
@@ -86,8 +88,10 @@ public class BigFraction {
    *   The fraction in string form
    */
   public BigFraction(String str) {
-    this.num = DEFAULT_NUMERATOR;
-    this.denom = DEFAULT_DENOMINATOR;
+    int indx = str.indexOf('/');
+    this.num = BigInteger.valueOf(Integer.valueOf(str.substring(0, indx)));
+    this.denom = BigInteger.valueOf(Integer.valueOf(str.substring(indx+1, str.length())));
+
   } // BigFraction
 
   // +---------+------------------------------------------------------
@@ -127,6 +131,28 @@ public class BigFraction {
   } // add(BigFraction)
 
   /**
+   * Multiply another fraction to this fraction.
+   *
+   * @param frac
+   *   The fraction to multiply.
+   *
+   * @return the result of the multiplication.
+   */
+  public BigFraction multiply(BigFraction frac) {
+    BigInteger resultNumerator;
+    BigInteger resultDenominator;
+
+    // The denominator of the result is the product of this object's
+    // denominator and num's denominator
+    resultDenominator = this.denom.multiply(frac.denom);
+    // The numerator is more complicated
+    resultNumerator = this.num.multiply(frac.num);
+
+    // Return the computed value
+    return new BigFraction(resultNumerator, resultDenominator);
+  } // add(BigFraction)
+
+  /**
    * Get the denominator of this fraction.
    *
    * @return the denominator
@@ -160,4 +186,19 @@ public class BigFraction {
     // return this.num.toString().concat("/").concat(this.denom.toString());
     return this.num + "/" + this.denom;
   } // toString()
+
+  /**
+   * Return fractional part.
+   * @num numerator - whole number
+   * @denum denumerator - whole number
+   * @return a string that represents the fraction.
+   */
+  public static BigFraction fractional(int num, int denum) {
+    BigInteger resultNumerator;
+    BigInteger resultDenominator;
+
+    resultNumerator = BigInteger.valueOf(num % denum);
+    resultDenominator = BigInteger.valueOf(denum);
+    return new BigFraction(resultNumerator, resultDenominator);
+  } // fractional(int, int)
 } // class BigFraction
